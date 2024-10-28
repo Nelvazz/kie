@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ChannelType, PermissionsBitField } = require('discord.js');
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 module.exports = async (client, interaction) => {
     if (!interaction.guild) return;
     try {
@@ -46,26 +46,146 @@ module.exports = async (client, interaction) => {
     // Select Menus
     try {
         if (interaction.isStringSelectMenu()) {
-            if (interaction.guild.channels.cache.find(c => c.topic == interaction.member.user.id)) {
-                return interaction.reply({ content: "You already have a ticket opened, you can't recreate one until the first one is deleted.", ephemeral: true });
-            }
-            let reason;
-            switch (interaction.values[0]) {
-                case 'report':
-                    reason = `⛔ ׀ Report a User / Raid`;
-                    break;
-                case 'recruitment':
-                    reason = `💼 ׀ Recruitment Demand`;
-                    break;
-                case 'unblacklist':
-                    reason = `⚖️ ׀ Unblacklist Demand`;
-                    break;
-                case 'other':
-                    reason = `💭 ׀ Others`;
-                    break;
-            }
+            /*if (interaction.guild.channels.cache.find(c => c.topic == interaction.member.user.id)) {
+                const embed = new EmbedBuilder()
+                    .setColor('#2b2d31')
+                    .setDescription(`You already have a ticket opened : <#${interaction.guild.channels.cache.find(c => c.topic == interaction.member.user.id).id}>`)
+                    .setFooter({ text: "Tickets System - Kie's Extension", iconURL: 'https://media.discordapp.net/attachments/813117085193601095/1039294433750958110/1f5c3.png' })
+                return interaction.message.reply({ embeds: [embed], ephemeral: true });
+            }*/
 
-            let channel_ticket = await interaction.guild.channels.create({
+            const report = new ModalBuilder()
+			.setCustomId('report')
+			.setTitle("Report a User / Raid")
+            .addComponents(
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('qsd')
+                        .setLabel("What do you want to report ?")
+                        .setPlaceholder("User - Raid")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Short)
+                        .setMaxLength(4)
+                        .setMinLength(4)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('d')
+                        .setLabel("Brief explanation")
+                        .setPlaceholder("Give a short explanation of the problem.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('dfd')
+                        .setLabel("Informations needed")
+                        .setPlaceholder("Please add IDS, proofs (Imgur Link Only) or any informations that can be useful.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('v')
+                        .setLabel("Information")
+                        .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setRequired(false)
+                        .setStyle(TextInputStyle.Paragraph)
+                )
+            )
+
+            const bug = new ModalBuilder()
+			.setCustomId('bug')
+			.setTitle("Report a Bug")
+            .addComponents(
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('qsd')
+                        .setLabel("Name of your idea")
+                        .setPlaceholder("A short name for your idea.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Short)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('d')
+                        .setLabel("Detailed explanation")
+                        .setPlaceholder("Give a detailed explanation of the bug and on how to do it.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('v')
+                        .setLabel("Information")
+                        .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setRequired(false)
+                        .setStyle(TextInputStyle.Paragraph)
+                )
+            )
+
+            const idea = new ModalBuilder()
+			.setCustomId('idea')
+			.setTitle("Suggest an Idea")
+            .addComponents(
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('qsd')
+                        .setLabel("Name of your idea")
+                        .setPlaceholder("A short name for your idea.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Short)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('d')
+                        .setLabel("Brief explanation")
+                        .setPlaceholder("Give a short explanation of your idea.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('v')
+                        .setLabel("Information")
+                        .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setRequired(false)
+                        .setStyle(TextInputStyle.Paragraph)
+                )
+            )
+            
+        switch (interaction.values[0]) {
+            case 'report':
+                await interaction.showModal(report);
+                break;
+            case 'bug':
+                await interaction.showModal(bug);
+                break;
+            case 'idea':
+                await interaction.showModal(idea);
+                break;
+            case 'recruitment':
+                await interaction.showModal(report);
+                break;
+            case 'other':
+                await interaction.showModal(report);
+                break;
+        }
+
+            /*let channel_ticket = await interaction.guild.channels.create({
                 name: `ticket-${interaction.member.user.username}`,
                 type: ChannelType.GuildText,
                 topic: interaction.member.user.id,
@@ -111,7 +231,7 @@ module.exports = async (client, interaction) => {
                 .setTitle(`A new ticket has been created !`)
                 .setDescription(`> ${TimeStampHello} **${interaction.member.user.username}** you just opened a ticket !\n> Ticket Subject : \`${reason}\`\n\n> A staff member will take care of you in a few moments, please wait...`)
                 .setFooter({ text: "Tickets System - Kie's Extension", iconURL: 'https://media.discordapp.net/attachments/813117085193601095/1039294433750958110/1f5c3.png' })
-            channel_ticket.send({ embeds: [embed], components: [buttons] })
+            channel_ticket.send({ embeds: [embed], components: [buttons] })*/
         }
     } catch (err) { console.log(err) }
 }
