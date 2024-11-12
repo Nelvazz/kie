@@ -1,7 +1,6 @@
 global.path = __dirname.replaceAll("\\", "/").replace("/container", "/");
 global.dataPath = path+'data/';
 global.jsonsPath = path+'data/jsons/';
-global.databasesPath = path+'data/databases/';
 global.containerPath = path+'container/';
 
 global.print = function (text) {
