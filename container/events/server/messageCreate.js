@@ -42,6 +42,11 @@ module.exports = async (client, message) => {
                         value: 'recruitment',
                     },
                     {
+                        label: '🔄 ׀ Direct Talk',
+                        description: "You want to talk with a Staff of RaidCleaner ? Click Here !",
+                        value: 'direct',
+                    },
+                    {
                         label: '💭 ׀ Others',
                         description: "Not listed here ? We still have the answer !",
                         value: 'other',

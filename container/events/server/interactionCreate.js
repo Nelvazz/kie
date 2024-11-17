@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const { PermissionsBitField, ChannelType, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 module.exports = async (client, interaction) => {
     if (!interaction.guild) return;
     try {
@@ -61,7 +61,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('qsd')
+                        .setCustomId('type')
                         .setLabel("What do you want to report ?")
                         .setPlaceholder("User - Raid")
                         .setRequired(true)
@@ -72,7 +72,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('d')
+                        .setCustomId('explanation')
                         .setLabel("Brief explanation")
                         .setPlaceholder("Give a short explanation of the problem.")
                         .setRequired(true)
@@ -81,7 +81,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('dfd')
+                        .setCustomId('informations')
                         .setLabel("Informations needed")
                         .setPlaceholder("Please add IDS, proofs (Imgur Link Only) or any informations that can be useful.")
                         .setRequired(true)
@@ -90,7 +90,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('v')
+                        .setCustomId('none')
                         .setLabel("Information")
                         .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
                         .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
@@ -106,16 +106,16 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('qsd')
-                        .setLabel("Name of your idea")
-                        .setPlaceholder("A short name for your idea.")
+                        .setCustomId('title')
+                        .setLabel("Bug title")
+                        .setPlaceholder("A short title to describe the bug.")
                         .setRequired(true)
                         .setStyle(TextInputStyle.Short)
                 ),
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('d')
+                        .setCustomId('explanation')
                         .setLabel("Detailed explanation")
                         .setPlaceholder("Give a detailed explanation of the bug and on how to do it.")
                         .setRequired(true)
@@ -124,7 +124,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('v')
+                        .setCustomId('none')
                         .setLabel("Information")
                         .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
                         .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
@@ -140,7 +140,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('qsd')
+                        .setCustomId('name')
                         .setLabel("Name of your idea")
                         .setPlaceholder("A short name for your idea.")
                         .setRequired(true)
@@ -149,7 +149,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('d')
+                        .setCustomId('explanation')
                         .setLabel("Brief explanation")
                         .setPlaceholder("Give a short explanation of your idea.")
                         .setRequired(true)
@@ -158,7 +158,7 @@ module.exports = async (client, interaction) => {
                 new ActionRowBuilder()
                 .addComponents(
                     new TextInputBuilder()
-                        .setCustomId('v')
+                        .setCustomId('none')
                         .setLabel("Information")
                         .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
                         .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
@@ -166,72 +166,172 @@ module.exports = async (client, interaction) => {
                         .setStyle(TextInputStyle.Paragraph)
                 )
             )
-            
-        switch (interaction.values[0]) {
-            case 'report':
-                await interaction.showModal(report);
-                break;
-            case 'bug':
-                await interaction.showModal(bug);
-                break;
-            case 'idea':
-                await interaction.showModal(idea);
-                break;
-            case 'recruitment':
-                await interaction.showModal(report);
-                break;
-            case 'other':
-                await interaction.showModal(report);
-                break;
-        }
 
-            /*let channel_ticket = await interaction.guild.channels.create({
-                name: `ticket-${interaction.member.user.username}`,
-                type: ChannelType.GuildText,
-                topic: interaction.member.user.id,
-                parent: "877558852927778846",
-                permissionOverwrites: [{
-                    id: interaction.guild.id,
-                    deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]
-                },
-                {
-                    id: interaction.member.user.id,
-                    allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]
-                },
-                {
-                    id: "984932188510388274",
-                    allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.ManageMessages]
-                }]
-            })
-
-            // let pingStaff = await channel_ticket.send("<@&984932188510388274>").then( setTimeout(() => { pingStaff.delete() }, 1000) )
-            let pingUser = await channel_ticket.send(`<@${interaction.member.user.id}>`).then( setTimeout(() => { pingUser.delete() }, 1000) )
-            let TimeStampHello;
-            var today = new Date();
-            var curHr = today.getHours();
-
-            const buttons = new ActionRowBuilder()
+            const recruitment = new ModalBuilder()
+			.setCustomId('recruitment')
+			.setTitle("Recruitment Demand")
             .addComponents(
-                new ButtonBuilder()
-                    .setStyle(ButtonStyle.Secondary)
-                    .setEmoji('🚩')
-                    .setCustomId('pick_ticket'),
-                new ButtonBuilder()
-                    .setStyle(ButtonStyle.Secondary)
-                    .setEmoji('❌')
-                    .setCustomId('close_ticket')
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('post')
+                        .setLabel("The post you want to apply")
+                        .setPlaceholder("Post intitulate.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Short)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('motivation')
+                        .setLabel("Show your motivation")
+                        .setPlaceholder("Give a short explanation of your motivations to integrate the Team.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('none')
+                        .setLabel("Information")
+                        .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setRequired(false)
+                        .setStyle(TextInputStyle.Paragraph)
+                )
             )
 
-            if (curHr < 18) TimeStampHello = "Good morning";
-            if (curHr >= 18) TimeStampHello = "Good afternoon";
+            const other = new ModalBuilder()
+			.setCustomId('other')
+			.setTitle("Other")
+            .addComponents(
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('topic')
+                        .setLabel("The topic of your demand")
+                        .setPlaceholder("A short title for your demand.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Short)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('explanation')
+                        .setLabel("Explanation")
+                        .setPlaceholder("Give a short explanation of your demand.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('details')
+                        .setLabel("Other details")
+                        .setPlaceholder("Feel free to add some details if you want.")
+                        .setRequired(true)
+                        .setStyle(TextInputStyle.Paragraph)
+                ),
+                new ActionRowBuilder()
+                .addComponents(
+                    new TextInputBuilder()
+                        .setCustomId('none')
+                        .setLabel("Information")
+                        .setValue("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setPlaceholder("Once submitted, we will recontact you if precision are needed.\nMake sure your DMs are open.")
+                        .setRequired(false)
+                        .setStyle(TextInputStyle.Paragraph)
+                )
+            )
 
-            const embed = new EmbedBuilder()
-                .setColor('#ffa200')
-                .setThumbnail(interaction.member.user.displayAvatarURL({ format: 'png', dynamic: true }))
-                .setTitle(`A new ticket has been created !`)
-                .setDescription(`> ${TimeStampHello} **${interaction.member.user.username}** you just opened a ticket !\n> Ticket Subject : \`${reason}\`\n\n> A staff member will take care of you in a few moments, please wait...`)
-                .setFooter({ text: "Tickets System - Kie's Extension", iconURL: 'https://media.discordapp.net/attachments/813117085193601095/1039294433750958110/1f5c3.png' })
-            channel_ticket.send({ embeds: [embed], components: [buttons] })*/
+            switch (interaction.values[0]) {
+                case 'report':
+                    await interaction.showModal(report);
+                    break;
+                case 'bug':
+                    await interaction.showModal(bug);
+                    break;
+                case 'idea':
+                    await interaction.showModal(idea);
+                    break;
+                case 'recruitment':
+                    await interaction.showModal(recruitment);
+                    break;
+                case 'other':
+                    await interaction.showModal(other);
+                    break;
+                default:
+                    let channel_ticket = await interaction.guild.channels.create({
+                        name: `ticket-${interaction.member.user.username}`,
+                        type: ChannelType.GuildText,
+                        topic: interaction.member.user.id,
+                        parent: "877558852927778846",
+                        permissionOverwrites: [{
+                            id: interaction.guild.id,
+                            deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]
+                        },
+                        {
+                            id: interaction.member.user.id,
+                            allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel]
+                        },
+                        {
+                            id: "984932188510388274",
+                            allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels, PermissionsBitField.Flags.ManageMessages]
+                        }]
+                    })
+                    interaction.reply({ content: `Ticket opened : ${channel_ticket}`, ephemeral: true });
+
+                    // let pingStaff = await channel_ticket.send("<@&984932188510388274>").then( setTimeout(() => { pingStaff.delete() }, 1000) )
+                    let pingUser = await channel_ticket.send(`<@${interaction.member.user.id}>`).then( setTimeout(() => { pingUser.delete() }, 1000) )
+                    let TimeStampHello;
+                    var today = new Date();
+                    var curHr = today.getHours();
+
+                    const buttons = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('🚩')
+                            .setCustomId('pick_ticket'),
+                        new ButtonBuilder()
+                            .setStyle(ButtonStyle.Secondary)
+                            .setEmoji('❌')
+                            .setCustomId('close_ticket')
+                    )
+
+                    if (curHr < 18) TimeStampHello = "Good morning";
+                    if (curHr >= 18) TimeStampHello = "Good afternoon";
+
+                    const embed = new EmbedBuilder()
+                        .setColor('#ffa200')
+                        .setThumbnail(interaction.member.user.displayAvatarURL({ format: 'png', dynamic: true }))
+                        .setTitle(`A new ticket has been created !`)
+                        .setDescription(`> ${TimeStampHello} **${interaction.member.user.username}** you just opened a ticket !\n> A staff member will take care of you in a few moments, please wait...`)
+                        .setFooter({ text: "Tickets System - Kie's Extension", iconURL: 'https://media.discordapp.net/attachments/813117085193601095/1039294433750958110/1f5c3.png' })
+                    channel_ticket.send({ embeds: [embed], components: [buttons] })
+            }
+        }
+    } catch (err) { console.log(err) }
+    try {
+        if (interaction.isModalSubmit()) {
+            console.log(interaction)
+            switch (interaction.customId) {
+                case 'report':
+                    // Mlem
+                break;
+                case 'bug':
+                    // Super Mlem
+                break;
+                case 'idea':
+                    // Mega Mlem
+                break;
+                case 'recruitment':
+                    // Giga Mlem
+                break;
+                case 'other':
+                    // Extra Mlem
+                break;
+            }
         }
     } catch (err) { console.log(err) }
 }
